@@ -60,7 +60,7 @@ php artisan kafka:user:register:consumer
 
 **3、生产者核心代码**  
 
-`Kafka-Skeleton\app\Util\KafkaUtil.php`：  
+`Kafka-Skeleton/app/Util/KafkaUtil.php`：  
 
 ```php
 /**
