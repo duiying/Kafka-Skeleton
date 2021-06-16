@@ -20,7 +20,7 @@
 git clone https://github.com/duiying/Kafka-Skeleton
 ```
 
-2、准备 PHP7.4 基础环境，需要 PHP7.4 Cli、Composer、Redis 扩展、Kafka 扩展。  
+2、准备 PHP7.4 基础环境，需要 PHP7.4 CLI（暂不需要 PHP-FPM）、Composer、Redis 扩展、Kafka 扩展。  
 
 参考：[PHP7.4 环境搭建](docs/PHP7.4环境搭建.md)。  
 

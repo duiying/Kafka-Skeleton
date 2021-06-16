@@ -3,7 +3,7 @@
 基础服务包括：Kafka、MySQL、Redis。  
 
 ```bash
-cd Kafka-Skeleton
+cd Kafka-Skeleton/docker
 docker-compose up -d
 ```
 
