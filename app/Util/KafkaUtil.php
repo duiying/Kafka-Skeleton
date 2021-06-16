@@ -66,6 +66,10 @@ class KafkaUtil
             return false;
         }
 
+        // 数据中默认加上时间戳 & 格式化时间
+        !isset($data['kafka_timestamp'])    && $data['kafka_timestamp'] = time();
+        !isset($data['kafka_format_time'])  && $data['kafka_format_time'] = date('Y-m-d H:i:s');
+
         $path = "/data/logs/$topicName/";
         !is_dir('/data') && mkdir('/data');
         !is_dir('/data/logs') && mkdir('/data/logs');
