@@ -41,8 +41,15 @@ docker exec -it kafka1 bash
 /opt/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic user-register --partitions 5 --zookeeper zoo1:2181 --replication-factor 3
 ```
 
+5、Rsyslog 相关配置。  
 
+参考：[Rsyslog 相关配置](docs/Rsyslog相关配置.md)。  
 
+6、启动生产者和消费者，发现可以正常消费了。  
 
+```bash
+php artisan kafka:user:register:producer
+php artisan kafka:user:register:consumer
+```
 
 
