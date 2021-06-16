@@ -14,7 +14,11 @@
 
 **项目背景？**  
 
+业务方产生的数据需要被多个下游服务消费，工作原理如下：  
 
+<div align=center><img src="https://raw.githubusercontent.com/duiying/Kafka-Skeleton/master/docs/%E5%8E%9F%E7%90%86%E5%9B%BE.png" width="800"></div>  
+
+以**用户注册**场景为例，一个用户注册成功，此时由「业务方」将该记录写入磁盘文件，再由 Rsyslog 将磁盘上的该记录写入到 Kafka 指定 Topic 中，此时不同的消费服务可以去订阅该 Topic 来进行消费，比如优惠券部门、审核部门等等，实现了不同部门之间的解耦合。
 
 **如何安装？**  
 
