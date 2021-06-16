@@ -7,21 +7,26 @@ use App\Util\KafkaUtil;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class CanalConsumer extends Command
+/**
+ * Kafka 用户注册消费者脚本（Demo）
+ *
+ * @package App\Console\Commands\Kafka
+ */
+class UserRegisterDemoConsumer extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'kafka:canal:consumer';
+    protected $signature = 'kafka:user:register:consumer';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Kafka Canal 消费者脚本';
+    protected $description = 'Kafka 用户注册消费者脚本（Demo）';
 
     /**
      * Execute the console command.
@@ -30,7 +35,7 @@ class CanalConsumer extends Command
      */
     public function handle()
     {
-        $topicName  = KafkaConstant::TOPIC_CANAL;
+        $topicName  = KafkaConstant::TOPIC_USER_REGISTER;
         $groupId    = $this->signature;
         $brokerList = env('KAFKA_BROKER_LIST');
 
@@ -48,7 +53,7 @@ class CanalConsumer extends Command
             switch ($msg->err) {
                 case \RD_KAFKA_RESP_ERR_NO_ERROR:
                     $payload = json_decode($msg->payload, true);
-                    Log::info("$topicName topic 操作：{$payload['type']} 变更的库：{$payload['database']} 变更的表：{$payload['table']} 变更的数据：{$payload['data']}");
+                    print_r($payload);
                     break;
                 case \RD_KAFKA_RESP_ERR__PARTITION_EOF:
                     Log::error("$topicName topic waiting to receive msg");

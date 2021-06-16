@@ -4,7 +4,12 @@ namespace App\Util;
 
 use Illuminate\Support\Facades\Log;
 
-class Util
+/**
+ * Kafka 工具类
+ *
+ * @package App\Util
+ */
+class KafkaUtil
 {
     use Singleton;
 
