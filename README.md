@@ -34,11 +34,11 @@ composer install
 
 4、创建相关 Topic。    
 
-进入任意一个 Kafka 容器，创建名为 user_register 的 Topic：  
+进入任意一个 Kafka 容器，创建名为 user-register 的 Topic：  
 
 ```sh
 docker exec -it kafka1 bash
-/opt/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic user_register --partitions 5 --zookeeper zoo1:2181 --replication-factor 3
+/opt/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic user-register --partitions 5 --zookeeper zoo1:2181 --replication-factor 3
 ```
 
 
