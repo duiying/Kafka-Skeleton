@@ -16,9 +16,9 @@
 
 业务方产生的数据需要被多个下游服务消费，工作原理如下：  
 
-<div align=center><img src="https://raw.githubusercontent.com/duiying/Kafka-Skeleton/master/docs/%E5%8E%9F%E7%90%86%E5%9B%BE.png" width="800"></div>  
+<div align=center><img src="https://raw.githubusercontent.com/duiying/Kafka-Skeleton/master/docs/原理图.png" width="400"></div>  
 
-以**用户注册**场景为例，一个用户注册成功，此时由「业务方」将该记录写入磁盘文件，再由 Rsyslog 将磁盘上的该记录写入到 Kafka 指定 Topic 中，此时不同的消费服务可以去订阅该 Topic 来进行消费，比如优惠券部门、审核部门等等，实现了不同部门之间的解耦合。
+以**用户注册**场景为例，一个用户注册成功，此时由「业务方」将该记录写入磁盘文件，再由 Rsyslog 将磁盘上的该记录写入到 Kafka 指定 Topic 中，此时不同的消费服务可以去订阅该 Topic 来进行消费，比如「优惠券部门」、「审核部门」等等，实现了不同部门之间的解耦合。
 
 **如何安装？**  
 
@@ -59,5 +59,45 @@ docker exec -it kafka1 bash
 php artisan kafka:user:register:producer
 php artisan kafka:user:register:consumer
 ```
+
+**生产者核心代码**  
+
+```php
+/**
+ * 消息写入 Kafka
+ * 并非直接由程序写入 Kafka 中，实际写入 Kafka 的流程为：1、由程序写入本地磁盘文件；2、通过 Rsyslog 收集磁盘中的日志数据到 Kafka 中。
+ *
+ * @param string $topicName
+ * @param array $data
+ * @return bool
+ */
+public function sendToKafka($topicName = '', $data = [])
+{
+    if (empty($topicName || empty($data))) {
+        Log::error(sprintf('send to kafka error，topicName：%s，data：%s', $topicName, json_encode($data)));
+        return false;
+    }
+
+    // 数据中默认加上时间戳 & 格式化时间
+    !isset($data['kafka_timestamp'])    && $data['kafka_timestamp'] = time();
+    !isset($data['kafka_format_time'])  && $data['kafka_format_time'] = date('Y-m-d H:i:s');
+
+    $path = "/data/logs/$topicName/";
+    !is_dir('/data') && mkdir('/data');
+    !is_dir('/data/logs') && mkdir('/data/logs');
+    !is_dir($path) && mkdir($path);
+
+    $file = $path . date('YmdH') . '.log';
+    $sendRes = file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND | LOCK_EX);
+    if ($sendRes === false) {
+        Log::error(sprintf('send to kafka failed，topicName：%s，data：%s', $topicName, json_encode($data)));
+        return false;
+    }
+
+    return true;
+}
+```
+
+
 
 
