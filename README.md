@@ -62,6 +62,8 @@ php artisan kafka:user:register:consumer
 
 **3、生产者核心代码**  
 
+`Kafka-Skeleton\app\Util\KafkaUtil.php`：  
+
 ```php
 /**
  * 消息写入 Kafka
