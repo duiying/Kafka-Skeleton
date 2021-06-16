@@ -2,6 +2,8 @@
 
 namespace App\Util;
 
+use Illuminate\Support\Facades\Log;
+
 class Util
 {
     use Singleton;
@@ -42,5 +44,36 @@ class Util
         $consumer = new \RdKafka\KafkaConsumer($conf);
         $consumer->subscribe([$topicName]);
         return $consumer;
+    }
+
+    /**
+     * 消息写入 Kafka
+     * 并非直接由程序写入 Kafka 中，实际写入 Kafka 的流程为：1、由程序写入本地磁盘文件；2、通过 Rsyslog 收集磁盘中的日志数据到 Kafka 中。
+     *
+     * @param string $topicName
+     * @param array $data
+     * @return bool
+     */
+    public function sendToKafka($topicName = '', $data = [])
+    {
+        if (empty($topicName || empty($data))) {
+            Log::error(sprintf('send to kafka error，topicName：%s，data：%s', $topicName, json_encode($data)));
+            return false;
+        }
+
+        $path = "/data/logs/$topicName/";
+        if ((is_dir($path) === false) && !mkdir($path) && !is_dir($path)) {
+            Log::error(sprintf('send to kafka directory error，topicName：%s，data：%s', $topicName, json_encode($data)));
+            return false;
+        }
+
+        $file = $path . date('YmdH') . '.log';
+        $sendRes = file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND | LOCK_EX);
+        if ($sendRes === false) {
+            Log::error(sprintf('send to kafka failed，topicName：%s，data：%s', $topicName, json_encode($data)));
+            return false;
+        }
+
+        return true;
     }
 }

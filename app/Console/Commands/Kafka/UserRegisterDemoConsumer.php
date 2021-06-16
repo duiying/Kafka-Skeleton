@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands\Kafka;
 
-use App\Util\Util;
+use App\Constant\KafkaConstant;
+use App\Util\KafkaUtil;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -20,7 +21,7 @@ class CanalConsumer extends Command
      *
      * @var string
      */
-    protected $description = 'Kafka Canal 消费脚本';
+    protected $description = 'Kafka Canal 消费者脚本';
 
     /**
      * Execute the console command.
@@ -29,11 +30,11 @@ class CanalConsumer extends Command
      */
     public function handle()
     {
-        $topicName  = 'canal';
+        $topicName  = KafkaConstant::TOPIC_CANAL;
         $groupId    = $this->signature;
         $brokerList = env('KAFKA_BROKER_LIST');
 
-        $consumer = Util::getInstance()->getKafkaConsumer($groupId, $brokerList, $topicName);
+        $consumer = KafkaUtil::getInstance()->getKafkaConsumer($groupId, $brokerList, $topicName);
 
         while (true) {
             // 60 秒内有数据就消费
