@@ -53,7 +53,7 @@ class UserRegisterDemoConsumer extends Command
             switch ($msg->err) {
                 case \RD_KAFKA_RESP_ERR_NO_ERROR:
                     $payload = json_decode($msg->payload, true);
-                    print_r($payload);
+                    echo '消费到数据：' . json_encode($payload) . PHP_EOL;
                     break;
                 case \RD_KAFKA_RESP_ERR__PARTITION_EOF:
                     Log::error("$topicName topic waiting to receive msg");
