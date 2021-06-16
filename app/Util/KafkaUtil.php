@@ -67,10 +67,9 @@ class KafkaUtil
         }
 
         $path = "/data/logs/$topicName/";
-        if ((is_dir($path) === false) && !mkdir($path) && !is_dir($path)) {
-            Log::error(sprintf('send to kafka directory error，topicName：%s，data：%s', $topicName, json_encode($data)));
-            return false;
-        }
+        !is_dir('/data') && mkdir('/data');
+        !is_dir('/data/logs') && mkdir('/data/logs');
+        !is_dir($path) && mkdir($path);
 
         $file = $path . date('YmdH') . '.log';
         $sendRes = file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND | LOCK_EX);
