@@ -6,22 +6,38 @@
 
 `Producer`：  
 
-- Canal
 - Rsyslog
 
 `Consumer`：  
 
-- 基于 Lumen 框架的 PHP 消费脚本
+- 基于 Lumen 框架的 Kafka 消费脚本
 
 **如何安装？**  
 
 1、下载项目。  
 
-2、数据库环境配置。  
-
-```sql
-CREATE DATABASE kafka_skeleton DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;
+```sh
+git clone https://github.com/duiying/Kafka-Skeleton
 ```
+
+2、准备 PHP7.4 基础环境，需要 PHP7.4 Cli、Composer、Redis 扩展、Kafka 扩展。  
+
+参考：[PHP7.4 环境搭建](docs/PHP7.4环境搭建.md)。  
+
+2、通过 Docker-Compose 搭建基础服务（基础服务包括：Kafka、MySQL、Redis）。   
+
+参考： [通过 Docker-Compose 搭建基础服务](docs/通过Docker-Compose搭建基础服务.md)
+
+3、创建相关 Topic。  
+
+进入任意一个 Kafka 容器，创建名为 user_register 的 Topic：  
+
+```sh
+docker exec -it kafka1 bash
+/opt/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic user_register --partitions 5 --zookeeper zoo1:2181 --replication-factor 3
+```
+
+
 
 
 

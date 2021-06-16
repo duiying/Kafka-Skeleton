@@ -2,7 +2,8 @@
 
 namespace App\Console;
 
-use App\Console\Commands\Kafka\CanalConsumer;
+use App\Console\Commands\Kafka\UserRegisterDemoConsumer;
+use App\Console\Commands\Kafka\UserRegisterDemoProducer;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        CanalConsumer::class,
+        UserRegisterDemoConsumer::class,
+        UserRegisterDemoProducer::class,
     ];
 
     /**
