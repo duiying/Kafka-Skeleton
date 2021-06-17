@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\Kafka\BakKafkaLog;
 use App\Console\Commands\Kafka\UserRegisterDemoConsumer;
 use App\Console\Commands\Kafka\UserRegisterDemoProducer;
 use Illuminate\Console\Scheduling\Schedule;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         UserRegisterDemoConsumer::class,
         UserRegisterDemoProducer::class,
+        BakKafkaLog::class,
     ];
 
     /**

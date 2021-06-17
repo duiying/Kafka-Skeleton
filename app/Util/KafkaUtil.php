@@ -2,6 +2,7 @@
 
 namespace App\Util;
 
+use App\Constant\KafkaConstant;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -83,5 +84,86 @@ class KafkaUtil
         }
 
         return true;
+    }
+
+    /**
+     * 备份数据，只保留当天的日志
+     *
+     * @return bool
+     */
+    public static function bakKafkaLog()
+    {
+        $topicList = KafkaConstant::TOPIC_LIST;
+
+        if (!is_dir('/data')) {
+            return false;
+        }
+        if (!is_dir('/data/logs')) {
+            return false;
+        }
+
+        foreach ($topicList as $topicName) {
+            $dirName = "/data/logs/$topicName";
+            if (!is_dir($dirName)) {
+                continue;
+            }
+
+            $shouldBakFileList = self::getDirFileList($dirName);
+            if (empty($shouldBakFileList)) {
+                continue;
+            }
+
+            // 移动文件到备份目录下
+            foreach ($shouldBakFileList as $shouBakFile) {
+                exec("mv $shouBakFile /data/logs/bak/$topicName/");
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取一个文件夹下所有应该被清理的文件
+     *
+     * @param $dir
+     * @return array
+     */
+    public static function getDirFileList($dir)
+    {
+        $dir = rtrim($dir, '/');
+
+        // 目录下的所有文件
+        $fileList = [];
+        if ($handle = opendir($dir)) {
+            while (($file = readdir($handle)) !== false) {
+                // 排除文件夹
+                if (is_dir($dir . '/' . $file)) {
+                    continue;
+                }
+                // 排除 . 和 ..
+                if ($file != '..' && $file != '.') {
+                    $fileList[] = $file;
+                }
+            }
+            closedir($handle);
+        }
+
+        if (empty($fileList)) {
+            return [];
+        }
+
+        // 应该备份的文件
+        $shouldBakFileList = [];
+        foreach ($fileList as $k => $v) {
+            $ymdInfoList = explode('.', $v);
+            if (isset($ymdInfoList[0]) && intval($ymdInfoList[0]) == $ymdInfoList[0] && strlen((string)$ymdInfoList[0]) === 10) {
+                // 如果不是今天的日志，那么该日志文件应该备份到其他目录
+                if (date('Ymd') !== date('Ymd', strtotime('YmdH', intval($ymdInfoList[0])))) {
+                    $shouldBakFileList[] = $dir . '/' . $v;
+                }
+            }
+        }
+
+        return $shouldBakFileList;
     }
 }
