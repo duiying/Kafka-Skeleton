@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * 备份数据，只保留当天的日志
+ * 请使用 Crontab 每天 10:00 执行一次该脚本
  *
  * @package App\Console\Commands\Kafka
  */
