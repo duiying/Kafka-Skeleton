@@ -160,7 +160,7 @@ class KafkaUtil
             $ymdInfoList = explode('.', $v);
             if (isset($ymdInfoList[0]) && intval($ymdInfoList[0]) == $ymdInfoList[0] && strlen((string)$ymdInfoList[0]) === 10) {
                 // 如果不是今天的日志，那么该日志文件应该备份到其他目录
-                if (date('Ymd') !== date('Ymd', strtotime('YmdH', intval($ymdInfoList[0])))) {
+                if (date('Ymd') !== mb_substr((string)$ymdInfoList[0], 0, 8)) {
                     $shouldBakFileList[] = $dir . '/' . $v;
                 }
             }
