@@ -115,6 +115,8 @@ class KafkaUtil
 
             // 移动文件到备份目录下
             foreach ($shouldBakFileList as $shouBakFile) {
+                !is_dir('/data/logs/bak') && mkdir('/data/logs/bak');
+                !is_dir("/data/logs/bak/$topicName") && mkdir("/data/logs/bak/$topicName");
                 exec("mv $shouBakFile /data/logs/bak/$topicName/");
             }
         }
